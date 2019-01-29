@@ -22,45 +22,21 @@
 # FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 
-# This is config.mk.  Generated from config.mk.in by configure.
+# This is @configure_input@
 #
 # If you use configure, this file overrides variables and augments rules
 # in the Makefile to reflect your configuration choices.  If you don't run
 # configure, the main Makefile contains suitable conservative defaults.
 
-prefix       = /usr/local
-exec_prefix  = ${prefix}
-bindir       = ${exec_prefix}/bin
-libexecdir   = ${exec_prefix}/libexec
-datarootdir  = ${prefix}/share
-mandir       = ${datarootdir}/man
 
-CC       = gcc
-CPPFLAGS = 
-CFLAGS   = -g -O2
-LDFLAGS  = 
-LIBS     = 
-
-DYNAMIC_FLAGS = -rdynamic
-
-USE_GPL = 1
-GSL_LIBS = -lgsl -lcblas
-PERL_CFLAGS =  -fno-common -DPERL_DARWIN -mmacosx-version-min=10.12 -fno-strict-aliasing -pipe -fstack-protector-strong -I/usr/local/include -DPERL_USE_SAFE_PUTENV  -I/usr/local/Cellar/perl/5.26.1/lib/perl5/5.26.1/darwin-thread-multi-2level/CORE 
-PERL_LIBS =    -mmacosx-version-min=10.12 -fstack-protector-strong -L/usr/local/lib  -L/usr/local/Cellar/perl/5.26.1/lib/perl5/5.26.1/darwin-thread-multi-2level/CORE -lperl -lpthread -ldl -lm -lutil -lc
-
-PLATFORM   = Darwin
-PLUGINS_ENABLED = yes
-plugindir = $(libexecdir)/bcftools
-PLUGIN_EXT = .so
-
-#HTSDIR = 
-#include $(HTSDIR)/htslib.mk
-#include $(HTSDIR)/htslib_static.mk
-#HTSLIB = $(HTSDIR)/libhts.a
-#HTSLIB_LIB = $(HTSLIB) $(HTSLIB_static_LIBS)
-#HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
-#BGZIP = $(HTSDIR)/bgzip
-#TABIX = $(HTSDIR)/tabix
-HTSLIB_CPPFLAGS = 
-HTSLIB_LDFLAGS = 
-HTSLIB_LIB = -lhts
+HTSDIR = ../htslib
+include $(HTSDIR)/htslib.mk
+include $(HTSDIR)/htslib_static.mk
+HTSLIB = $(HTSDIR)/libhts.a
+HTSLIB_LIB = $(HTSLIB) $(HTSLIB_static_LIBS)
+HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
+BGZIP = $(HTSDIR)/bgzip
+TABIX = $(HTSDIR)/tabix
+HTSLIB_CPPFLAGS = -I$(HTSDIR)
+#HTSLIB_LDFLAGS = @HTSLIB_LDFLAGS@
+#HTSLIB_LIB = -lhts

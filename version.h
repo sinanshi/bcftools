@@ -1,1 +1,1 @@
-#define BCFTOOLS_VERSION "1.8-13-g8602b8f"
+#define BCFTOOLS_VERSION "1.8-15-gcc1ab0d-dirty"

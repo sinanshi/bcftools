@@ -1,52 +1,21 @@
-# Prerequisites
-*.d
-
-# Object files
+bcftools
 *.o
-*.ko
-*.obj
-*.elf
+/version.h
+plugins/*.so
+plugins/*.dSYM
+plugins/*.P
 
-# Linker output
-*.ilk
-*.map
-*.exp
+aclocal.m4
+autom4te.cache
+config.cache
+config.h
+config.h.in
+config.log
+config.mk
+config.status
+configure
 
-# Precompiled Headers
-*.gch
-*.pch
+/test/test-rbuf
+/test/test-regidx
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
-
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+/TAGS

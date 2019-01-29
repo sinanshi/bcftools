@@ -65,7 +65,8 @@ typedef struct
     int mgt_arr, prev_rid;
     float *af; 
     int af_sites;
-    int this_pos; 
+    int this_pos;
+    int ncount; 
 }
 args_t;
 
@@ -174,30 +175,33 @@ int init(int argc, char **argv, bcf_hdr_t *in, bcf_hdr_t *out)
     args.hdr = in;
     char *ped_fname = NULL;
     char *af_fname = NULL;
+    char *ncount = NULL; 
     static struct option loptions[] =
     {
         {"ped",required_argument, NULL,'p'},
         {"af",required_argument, NULL,'a'},
+        {"ncount", required_argument, NULL, 'c'},
         {0,0,0,0}
     };
     int c;
-    while ((c = getopt_long(argc, argv, "?ha:p:",loptions,NULL)) >= 0)
+    while ((c = getopt_long(argc, argv, "?ha:p:c:",loptions,NULL)) >= 0)
     {
         switch (c) 
         {
             case 'p': ped_fname = optarg;  break; 
             case 'a': af_fname = optarg; break;
+            case 'c': ncount = optarg; break; 
             case 'h':
             case '?':
             default: error("%s", usage()); break;
         }
     }
    if ( !ped_fname ) error("Expected the -p option\n");
-   if ( !af_fname ) error("Expected the -a option\n");
+   if ( af_fname && !ncount) error("must supply the ncount.\n");
 
     parse_ped(&args, ped_fname);
     parse_af(&args, af_fname);
-
+    args.ncount = atoi(ncount); 
     args.this_pos = 0; 
     return 1;
 }
@@ -223,7 +227,6 @@ inline int parse_genotype(gt_t *gt, int32_t *ptr)
 
 bcf1_t *process(bcf1_t *rec)
 {
-    args.this_pos++; 
     int ngt = bcf_get_genotypes(args.hdr, rec, &args.gt_arr, &args.mgt_arr);
     if ( ngt<0 ) return NULL;
     ngt /= bcf_hdr_nsamples(args.hdr);
@@ -237,6 +240,7 @@ bcf1_t *process(bcf1_t *rec)
     }
 
     gt_t child, father, mother;
+    printf("%d-%f\t", args.this_pos, args.af[args.this_pos]);
     for (i=0; i<args.ntrio; i++)
     {
         trio_t *trio = &args.trio[i];
@@ -256,9 +260,11 @@ bcf1_t *process(bcf1_t *rec)
         if ( trio->prev > 0 )
         {
             if ( trio->prev!=test_phase ) {
-              if (trio->prev_switch == 1)
-                trio->nflip++;
-              trio->nswitch++;
+              // Don't count the singleton switches
+              if (args.af[args.this_pos] > args.ncount) {
+                if (trio->prev_switch == 1) trio->nflip++;
+                trio->nswitch++;
+              }
               trio->prev_switch = 1;
             }
             else trio->prev_switch = 0;
@@ -267,6 +273,8 @@ bcf1_t *process(bcf1_t *rec)
         trio->ntest++;
         trio->prev = test_phase;
     }
+
+    args.this_pos++; 
     return NULL;
 }
 
